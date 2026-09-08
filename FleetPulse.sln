@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3B844668-8D34-40E3-9046-FB0FF2865B75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{B414EA75-69CF-4B8A-892A-DF59B0D97369}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetPulse.Domain", "src\Core\FleetPulse.Domain\FleetPulse.Domain.csproj", "{A86EE328-5DD1-4280-A6ED-FBBF95911FD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetPulse.Application", "src\Core\FleetPulse.Application\FleetPulse.Application.csproj", "{6CA2C6B3-4D7C-4A2E-8052-D23CEA73CD5A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{40806261-C9DE-483F-A86A-A97F01DE0CAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetPulse.Persistence", "src\Infrastructure\FleetPulse.Persistence\FleetPulse.Persistence.csproj", "{8AA61822-0E6A-43D2-9BCB-6FF38B1EA223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetPulse.Infrastructure", "src\Infrastructure\FleetPulse.Infrastructure\FleetPulse.Infrastructure.csproj", "{E94B4FE2-0EF6-4180-8FDE-A53F810E420D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{35FCB294-6C59-4F8D-8C01-BCDA6799D5D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetPulse.WebAPI", "src\Presentation\FleetPulse.WebAPI\FleetPulse.WebAPI.csproj", "{4131AC48-5A61-4BB7-9912-904D736C064F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A86EE328-5DD1-4280-A6ED-FBBF95911FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A86EE328-5DD1-4280-A6ED-FBBF95911FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A86EE328-5DD1-4280-A6ED-FBBF95911FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A86EE328-5DD1-4280-A6ED-FBBF95911FD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CA2C6B3-4D7C-4A2E-8052-D23CEA73CD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA2C6B3-4D7C-4A2E-8052-D23CEA73CD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CA2C6B3-4D7C-4A2E-8052-D23CEA73CD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CA2C6B3-4D7C-4A2E-8052-D23CEA73CD5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AA61822-0E6A-43D2-9BCB-6FF38B1EA223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AA61822-0E6A-43D2-9BCB-6FF38B1EA223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AA61822-0E6A-43D2-9BCB-6FF38B1EA223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AA61822-0E6A-43D2-9BCB-6FF38B1EA223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E94B4FE2-0EF6-4180-8FDE-A53F810E420D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E94B4FE2-0EF6-4180-8FDE-A53F810E420D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E94B4FE2-0EF6-4180-8FDE-A53F810E420D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E94B4FE2-0EF6-4180-8FDE-A53F810E420D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4131AC48-5A61-4BB7-9912-904D736C064F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4131AC48-5A61-4BB7-9912-904D736C064F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4131AC48-5A61-4BB7-9912-904D736C064F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4131AC48-5A61-4BB7-9912-904D736C064F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B414EA75-69CF-4B8A-892A-DF59B0D97369} = {3B844668-8D34-40E3-9046-FB0FF2865B75}
+		{A86EE328-5DD1-4280-A6ED-FBBF95911FD1} = {B414EA75-69CF-4B8A-892A-DF59B0D97369}
+		{6CA2C6B3-4D7C-4A2E-8052-D23CEA73CD5A} = {B414EA75-69CF-4B8A-892A-DF59B0D97369}
+		{40806261-C9DE-483F-A86A-A97F01DE0CAD} = {3B844668-8D34-40E3-9046-FB0FF2865B75}
+		{8AA61822-0E6A-43D2-9BCB-6FF38B1EA223} = {40806261-C9DE-483F-A86A-A97F01DE0CAD}
+		{E94B4FE2-0EF6-4180-8FDE-A53F810E420D} = {40806261-C9DE-483F-A86A-A97F01DE0CAD}
+		{35FCB294-6C59-4F8D-8C01-BCDA6799D5D3} = {3B844668-8D34-40E3-9046-FB0FF2865B75}
+		{4131AC48-5A61-4BB7-9912-904D736C064F} = {35FCB294-6C59-4F8D-8C01-BCDA6799D5D3}
+	EndGlobalSection
+EndGlobal
