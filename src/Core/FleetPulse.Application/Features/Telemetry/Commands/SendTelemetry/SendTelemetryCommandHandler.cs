@@ -2,6 +2,7 @@
 using FleetPulse.Domain.Common.Helpers;
 using FleetPulse.Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,17 @@ using System.Threading.Tasks;
 namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
 {
     public class SendTelemetryCommandHandler(
-        ITelemetryRepository telemetryRepository,
-        IGeofenceRepository geofenceRepository,
-        IGeofenceViolationRepository violationRepository,
-        IAssetRepository assetRepository) : IRequestHandler<SendTelemetryCommand, string>
+     ITelemetryRepository telemetryRepository,
+     IGeofenceRepository geofenceRepository,
+     IGeofenceViolationRepository violationRepository,
+     IAssetRepository assetRepository,
+     ILogger<SendTelemetryCommandHandler> logger) : IRequestHandler<SendTelemetryCommand, string>
     {
         private readonly ITelemetryRepository _telemetryRepository = telemetryRepository;
         private readonly IGeofenceRepository _geofenceRepository = geofenceRepository;
         private readonly IGeofenceViolationRepository _violationRepository = violationRepository;
         private readonly IAssetRepository _assetRepository = assetRepository;
+        private readonly ILogger<SendTelemetryCommandHandler> _logger = logger;
 
         public async Task<string> Handle(SendTelemetryCommand request, CancellationToken cancellationToken)
         {
@@ -49,6 +52,8 @@ namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
                     };
 
                     await _violationRepository.AddAsync(violation);
+                    _logger.LogWarning("🚨 GEOFENCE İHLALİ! '{AssetName}' adlı araç sınır dışına çıktı! Uzaklık: {Distance:F2} metre",
+         asset?.Name ?? "Bilinmeyen Araç", distance);
                 }
             }
 
