@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>FleetPulse SignalR Test</title>
+</head>
+
+<body>
+
+    <h1>FleetPulse - Canlı Telemetri</h1>
+
+    <div id="status">SignalR bağlantısı kuruluyor...</div>
+
+    <hr>
+
+    <div id="telemetry"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/fleetHub")
+            .build();
+
+        connection.on("TelemetryReceived", function (data) {
+
+            console.log("Yeni telemetri:", data);
+
+            document.getElementById("telemetry").innerHTML = `
+                <p>Asset: ${data.assetId}</p>
+                <p>Latitude: ${data.latitude}</p>
+                <p>Longitude: ${data.longitude}</p>
+                <p>Speed: ${data.speed} km/h</p>
+                <p>Engine: ${data.engineStatus}</p>
+                <p>Time: ${data.timestamp}</p>
+            `;
+        });
+
+        connection.start()
+            .then(function () {
+                document.getElementById("status").innerText =
+                    "SignalR bağlantısı başarılı ✅";
+
+                console.log("FleetHub bağlantısı kuruldu.");
+            })
+            .catch(function (error) {
+                document.getElementById("status").innerText =
+                    "SignalR bağlantısı başarısız ❌";
+
+                console.error(error);
+            });
+    </script>
+
+</body>
+</html>

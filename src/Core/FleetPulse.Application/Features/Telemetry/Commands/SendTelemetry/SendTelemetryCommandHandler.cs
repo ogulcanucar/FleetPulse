@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FleetPulse.Application.Abstractions.Services;
+using FleetPulse.Application.Abstractions.DTOs.Telemetry;
 
 namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
 {
@@ -16,13 +18,14 @@ namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
      IGeofenceRepository geofenceRepository,
      IGeofenceViolationRepository violationRepository,
      IAssetRepository assetRepository,
-     ILogger<SendTelemetryCommandHandler> logger) : IRequestHandler<SendTelemetryCommand, string>
+     ILogger<SendTelemetryCommandHandler> logger, ITelemetryPublisher telemetryPublisher) : IRequestHandler<SendTelemetryCommand, string>
     {
         private readonly ITelemetryRepository _telemetryRepository = telemetryRepository;
         private readonly IGeofenceRepository _geofenceRepository = geofenceRepository;
         private readonly IGeofenceViolationRepository _violationRepository = violationRepository;
         private readonly IAssetRepository _assetRepository = assetRepository;
         private readonly ILogger<SendTelemetryCommandHandler> _logger = logger;
+        private readonly ITelemetryPublisher _telemetryPublisher = telemetryPublisher;
 
         public async Task<string> Handle(SendTelemetryCommand request, CancellationToken cancellationToken)
         {
@@ -68,6 +71,18 @@ namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
             };
 
             await _telemetryRepository.AddAsync(telemetry);
+            var telemetryDto = new TelemetryBroadcastDto
+            {
+                AssetId = telemetry.AssetId,
+                Latitude = telemetry.Latitude,
+                Longitude = telemetry.Longitude,
+                Speed = telemetry.Speed,
+                EngineStatus = telemetry.EngineStatus,
+                Timestamp = telemetry.Timestamp
+            };
+            await _telemetryPublisher.PublishTelemetryAsync(telemetryDto);
+
+
             return telemetry.Id;
         }
     }
