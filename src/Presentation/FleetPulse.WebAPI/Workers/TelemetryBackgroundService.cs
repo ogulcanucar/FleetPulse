@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MediatR;
+using RabbitMQ.Client.Exceptions;
 
 namespace FleetPulse.WebAPI.Workers;
 
@@ -51,9 +52,29 @@ public class TelemetryBackgroundService(
                     _logger.LogInformation("Simülasyon gönderildi -> Asset: {AssetName} ({AssetId}), Lat: {Lat}, Lng: {Lng}", asset.Name, asset.Id, latitude, longitude);
                 }
             }
+            catch (OperationCanceledException)
+     when (stoppingToken.IsCancellationRequested)
+            {
+                break;
+            }
+            catch (BrokerUnreachableException)
+            {
+                _logger.LogWarning(
+                    "RabbitMQ erişilemediği için event publish edilemedi. Telemetri simülasyonu devam ediyor."
+                );
+            }
+            catch (PublishReturnException)
+            {
+                _logger.LogWarning(
+                    "RabbitMQ mesajı herhangi bir queue'ya route edemedi. Telemetri simülasyonu devam ediyor."
+                );
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Telemetri simülasyonu çalışırken hata oluştu.");
+                _logger.LogError(
+                    ex,
+                    "Telemetri simülasyonu çalışırken beklenmeyen bir hata oluştu."
+                );
             }
 
             await Task.Delay(_interval, stoppingToken);
