@@ -1,7 +1,9 @@
 using FleetPulse.Application;
+using FleetPulse.Application.Abstractions.Messaging;
 using FleetPulse.Application.Abstractions.Services;
 using FleetPulse.Persistence;
 using FleetPulse.WebAPI.Hubs;
+using FleetPulse.WebAPI.Messaging;
 using FleetPulse.WebAPI.Services;
 using FleetPulse.WebAPI.Workers;
 
@@ -14,7 +16,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddHostedService<TelemetryBackgroundService>();
+builder.Services.AddHostedService<GeofenceViolationConsumer>();
 builder.Services.AddScoped<ITelemetryPublisher, SignalRTelemetryPublisher>();
+builder.Services.AddScoped<IEventPublisher, RabbitMqEventPublisher>();
+builder.Services.AddSingleton<RabbitMqConnectionManager>();
 builder.Services.AddSignalR();
 var app = builder.Build();
 

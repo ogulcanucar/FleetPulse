@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FleetPulse.Application.Abstractions.Services;
 using FleetPulse.Application.Abstractions.DTOs.Telemetry;
+using FleetPulse.Application.Events.Geofences;
+using FleetPulse.Application.Abstractions.Messaging;
 
 namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
 {
@@ -18,6 +20,7 @@ namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
      IGeofenceRepository geofenceRepository,
      IGeofenceViolationRepository violationRepository,
      IAssetRepository assetRepository,
+     IEventPublisher eventPublisher,
      ILogger<SendTelemetryCommandHandler> logger, ITelemetryPublisher telemetryPublisher) : IRequestHandler<SendTelemetryCommand, string>
     {
         private readonly ITelemetryRepository _telemetryRepository = telemetryRepository;
@@ -26,12 +29,15 @@ namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
         private readonly IAssetRepository _assetRepository = assetRepository;
         private readonly ILogger<SendTelemetryCommandHandler> _logger = logger;
         private readonly ITelemetryPublisher _telemetryPublisher = telemetryPublisher;
+        private readonly IEventPublisher _eventPublisher = eventPublisher;
 
         public async Task<string> Handle(SendTelemetryCommand request, CancellationToken cancellationToken)
         {
             var asset = await _assetRepository.GetByIdAsync(request.AssetId);
 
             var activeGeofences = await _geofenceRepository.GetActiveGeofencesAsync();
+           
+
             foreach (var geofence in activeGeofences)
             {
                 var distance = GeoCalculator.CalculateDistanceInMeters(
@@ -57,7 +63,20 @@ namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
                     await _violationRepository.AddAsync(violation);
                     _logger.LogWarning("🚨 GEOFENCE İHLALİ! '{AssetName}' adlı araç sınır dışına çıktı! Uzaklık: {Distance:F2} metre",
          asset?.Name ?? "Bilinmeyen Araç", distance);
+
+                    var violationEvent = new GeofenceViolationCreatedEvent(
+                        violation.Id,
+                        violation.AssetId,
+                        violation.GeofenceId,
+                        violation.DriverId,
+                        violation.Latitude,
+                        violation.Longitude,
+                        violation.DistanceInMeters,
+                        violation.ViolationTime
+                    );
+                    await _eventPublisher.PublishAsync(violationEvent);
                 }
+    
             }
 
             var telemetry = new TelemetryData
@@ -71,6 +90,7 @@ namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
             };
 
             await _telemetryRepository.AddAsync(telemetry);
+
             var telemetryDto = new TelemetryBroadcastDto
             {
                 AssetId = telemetry.AssetId,
@@ -80,6 +100,7 @@ namespace FleetPulse.Application.Features.Telemetry.Commands.SendTelemetry
                 EngineStatus = telemetry.EngineStatus,
                 Timestamp = telemetry.Timestamp
             };
+
             await _telemetryPublisher.PublishTelemetryAsync(telemetryDto);
 
 
